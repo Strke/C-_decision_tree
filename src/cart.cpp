@@ -29,7 +29,7 @@ void Cart::sort_by_kth_col(std::vector<std::vector<double>>& data_part, int k){
 }
 
 inline
-std::vector<std::vector<double>> Cart::buildTree(std::vector<std::vector<double>> data_for_every_tree, int k){
+Node* Cart::buildTree(std::vector<std::vector<double>> data_for_every_tree, int k){
     std::vector<double> judge;
     double g = 0;
     for(int i = 0; i < row; i ++){
@@ -38,20 +38,28 @@ std::vector<std::vector<double>> Cart::buildTree(std::vector<std::vector<double>
     }
     if(k + 1 == col){
         if(g > row - g){
-            return std::vector<std::vector<double>>
-            {std::vector<double>{-1}};}//return  yes
+            Node* x = (Node*)malloc(sizeof(Node));
+            x -> val = -1;x -> leftnode = NULL;x -> rightnode = NULL;
+            return x;
+            }//return  yes
         else {
-            return std::vector<std::vector<double>>
-            {std::vector<double>{-2}};} // return no
+            Node* x = (Node*)malloc(sizeof(Node));
+            x -> val = -2;x -> leftnode = NULL;x -> rightnode = NULL;
+            return x;
+            } // return no
     }
     if(abs(g) < double_distance){
-        return std::vector<std::vector<double>>
-            {std::vector<double>{-2}};} // return no
+            Node* x = (Node*)malloc(sizeof(Node));
+            x -> val = -2;x -> leftnode = NULL;x -> rightnode = NULL;
+            return x;
+            } // return no
     if(abs(g - row) < double_distance){ // return yes
-        return std::vector<std::vector<double>>
-            {std::vector<double>{-1}};}
+            Node* x = (Node*)malloc(sizeof(Node));
+            x -> val = -1;x -> leftnode = NULL;x -> rightnode = NULL;
+            return x;
+            }
 
-    std::vector<std::vector<double>> ans;
+    Node* ans = (Node*)malloc(sizeof(Node));
     sort_by_kth_col(data_for_every_tree, k);
     double gini_d = 1 - (g / row) * (g / row) - ((row - g)/row) * ((row - g)/row);
     std::vector<double> import_col;
@@ -73,8 +81,24 @@ std::vector<std::vector<double>> Cart::buildTree(std::vector<std::vector<double>
             minn = gini_array[i];
             pos = i;
         }
-    less_data = data_for_every_tree
-
+    std::vector<std::vector<double>> less_data, greater_data;
+    for(int i = 0; i <= pos; i ++){
+        std::vector<double> x;
+        for(int j = 0; j < col; j ++){
+            x.push_back(data_for_every_tree[i][j]);
+        }
+        less_data.push_back(x);
+    }
+    for(int i = pos + 1; i < row; i ++){
+        std::vector<double> x;
+        for(int j = 0; j < col; j ++){
+            x.push_back(data_for_every_tree[i][j]);
+        }
+        greater_data.push_back(x);
+    }
+    ans -> val = decision_col[pos];
+    ans -> leftnode = buildTree(less_data, k + 1);
+    ans -> leftnode = buildTree(greater_data, k + 1);
 };
 
 void Cart::train_model(){
@@ -84,10 +108,10 @@ void Cart::train_model(){
 void Cart::save_model(){
     std::ofstream outFile;
     outFile.open(model_road);
-    for(auto x : model){
-        outFile << x;
-        outFile << " ";
-    }
+   // for(auto x : model){
+    //    outFile << x;
+     //   outFile << " ";
+    //}
     outFile.close();
 }
 
