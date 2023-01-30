@@ -1,4 +1,5 @@
 #include "../include/cart.h"
+#include "../include/tool.h"
 #include <fstream>
 #include <iostream>
 #include <algorithm>
@@ -102,22 +103,31 @@ Node* Cart::buildTree(std::vector<std::vector<double>> data_for_every_tree, int 
 };
 
 void Cart::train_model(){
-    buildTree(data, 0);
+    head = (Node*)malloc(sizeof(Node));
+    head -> leftnode = buildTree(data, 0); //把模型的放在头结点的左孩子节点上
+    head -> leftnode = nullptr;
 }
 
 void Cart::save_model(){
     std::ofstream outFile;
     outFile.open(model_road);
-   // for(auto x : model){
-    //    outFile << x;
-     //   outFile << " ";
-    //}
+    std::vector<double> frt = FrontFollow(head->leftnode);
+    std::vector<double> mid = MiddleFollow(head -> rightnode);
+    std::string frtstr = Vector2String(frt);
+    std::string midstr = Vector2String(mid);
+    outFile << frtstr << "\n" << midstr;
     outFile.close();
 }
 
 void Cart::load_model(){
+    std::string frstr, midstr;
+    std::vector<double> frt, mid;
+    std::ifstream inFile(model_road);
+    getline(inFile, frstr);
+    getline(inFile, midstr);
+    frt = String2Vector(frstr);
+    mid = String2Vector(midstr);
+    head -> leftnode = TreeBuild(frt, mid);
 }
-
-
 }//namespace decision_tree
 }//namespace lin
