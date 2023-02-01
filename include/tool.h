@@ -16,6 +16,7 @@ std::vector<double> MiddleFollow(Node*);  //中缀表达式
 
 Node* TreeBuild(std::vector<double>&, std::vector<double>&); //根据先序遍历和中序遍历重现决策树
 
+std::vector<std::vector<double>> Data2Vector(std::string); 
 
 }//namespace decision_tree
 }//namespace lin

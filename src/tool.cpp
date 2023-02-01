@@ -1,10 +1,13 @@
 #include "../include/tool.h"
 #include <sstream>
+#include <fstream>
+#include <sstream>
+#include <iostream>
 
 namespace lin{
 namespace decision_tree{
 
-std::string Vector2String(std::vector<double>& sample){
+std::string Vector2String(std::vector<double>& sample){ 
     std::string res = "";
     for(auto x : sample){
         res += std::to_string(x);//只能保存六位小数
@@ -32,6 +35,7 @@ std::vector<double> FrontFollow(Node* headnode){
     right = FrontFollow(headnode -> rightnode);
     for(int i = 0; i < left.size(); i ++) res.push_back(left[i]);
     for(int i = 0; i < right.size(); i ++) res.push_back(right[i]);
+    return res;
 }
 
 std::vector<double> MiddleFollow(Node* headnode){
@@ -42,6 +46,7 @@ std::vector<double> MiddleFollow(Node* headnode){
     for(int i = 0; i < left.size(); i ++) res.push_back(left[i]);
     res.push_back(headnode -> val);
     for(int i = 0; i < right.size(); i ++) res.push_back(right[i]);
+    return res;
 }
 
 Node* TreeBuild(std::vector<double>& front, std::vector<double>& middle){
@@ -59,5 +64,28 @@ Node* TreeBuild(std::vector<double>& front, std::vector<double>& middle){
     return headnode;
 }
 
+std::vector<std::vector<double>> Data2Vector(std::string road){
+	std::ifstream inFile(road, std::ios::in);
+	std::string lineStr;
+	std::vector<std::vector<double>> strArray;
+	while (getline(inFile, lineStr))
+	{
+		// 打印整行字符串
+		//std::cout << lineStr << std::endl;
+		// 存成二维表结构
+		std::stringstream ss(lineStr);
+		std::string str;
+		std::vector<std::string> lineArray;
+		std::vector<double> doubleArray;
+		// 按照逗号分隔
+		while (getline(ss, str, ',')){
+			std::istringstream iss(str);
+    		double num; iss>>num;
+			doubleArray.push_back(num);
+		}
+		strArray.push_back(doubleArray);
+	}
+    return strArray;
+}
 }
 }
