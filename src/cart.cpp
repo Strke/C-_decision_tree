@@ -7,10 +7,17 @@
 namespace lin{
 namespace decision_tree{
 
-Cart::Cart(std::vector<std::vector<double>> x)
-:data(x), row(x.size()), col(x[0].size()) {
-    //row = row/100;
+Cart::Cart(std::vector<std::vector<double>>& x)
+:data(x), row(x.size()), col(x[0].size()){
+    head = new Node;
 };
+
+Cart::~Cart(){
+    if(head != NULL){
+        delete head;
+        head = NULL;
+    }
+}
 
 double Cart::gini(std::vector<double>& p){
     double yes = 0;

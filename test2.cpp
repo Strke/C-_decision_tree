@@ -23,7 +23,8 @@ class Cart
 {
     public:
         Cart();
-        Cart(std::vector<std::vector<double>>);  //使用一个二维数组构造类，该二维数组为全部数据
+        Cart(std::vector<std::vector<double>>&);  //使用一个二维数组构造类，该二维数组为全部数据
+        ~Cart();
 
     private:
         std::vector<std::vector<double>> data;   //data代表一个二维数据矩阵，代表全部数据
@@ -133,17 +134,17 @@ std::vector<std::vector<double>> Data2Vector(std::string road){
 
 
 
-Cart::Cart(std::vector<std::vector<double>> x)
-{
-    for(auto arr : x){
-        std::vector<double> t;
-        for(int i = 0; i < arr.size(); i ++) t.push_back(arr[i]);
-        data.push_back(t);
-    }
-    row = x.size();
-    col = x[0].size();
-    head = (Node*)malloc(sizeof(Node));
+Cart::Cart(std::vector<std::vector<double>>& x)
+:data(x), row(x.size()), col(x[0].size()){
+    head = new Node;
 };
+
+Cart::~Cart(){
+    if(head != NULL){
+        delete head;
+        head = NULL;
+    }
+}
 
 double Cart::gini(std::vector<double>& p){
     double yes = 0;

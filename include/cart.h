@@ -18,7 +18,8 @@ class Cart
 {
     public:
         Cart();
-        Cart(std::vector<std::vector<double>>);  //使用一个二维数组构造类，该二维数组为全部数据
+        Cart(std::vector<std::vector<double>>&);  //使用一个二维数组构造类，该二维数组为全部数据
+        ~Cart();
 
     private:
         std::vector<std::vector<double>> data;   //data代表一个二维数据矩阵，代表全部数据
